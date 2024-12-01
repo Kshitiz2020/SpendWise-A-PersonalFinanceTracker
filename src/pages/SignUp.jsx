@@ -1,4 +1,10 @@
+import Header from "../components/Header";
+
 function SignUp() {
-  return <div>SignUp</div>;
+  return (
+    <div>
+      <Header />
+    </div>
+  );
 }
 export default SignUp;
