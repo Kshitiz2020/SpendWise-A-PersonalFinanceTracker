@@ -1,5 +1,7 @@
 import Input from "./Input";
+import Button from "./Button";
 import { useState } from "react";
+import SignUp from "../pages/SignUp";
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -40,11 +42,11 @@ function SignUpSignIn() {
           setState={setConfirmPassword}
           placeholder=" Confirm Your Password"
         />
-        <button className="w-full px-4 py-2 mt-4 text-lg font-semibold text-white transition-all bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300">
-          Sign Up
-        </button>
+        <Button buttonLabel="Sign Up" isPrimary={true} />
+        <p className="text-center">or</p>
+        <Button buttonLabel="SignUp with Google" isPrimary={false} />
         <p className="mt-6 text-sm text-center text-gray-600">
-          Already have an account?{" "}
+          Already have an account?
           <a href="#" className="font-medium text-indigo-600 hover:underline">
             Log In
           </a>

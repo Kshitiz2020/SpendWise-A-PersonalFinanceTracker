@@ -7,7 +7,7 @@ function Input({ label, state, setState, placeholder }) {
         value={state}
         onChange={(e) => setState(e.target.value)}
         placeholder={placeholder}
-        className="block w-full py-4 mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+        className="block w-full py-1 mt-1 border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
       />
     </div>
   );
