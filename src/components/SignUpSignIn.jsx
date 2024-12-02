@@ -4,6 +4,8 @@ import { useState } from "react";
 function SignUpSignIn() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
@@ -25,6 +27,18 @@ function SignUpSignIn() {
           state={email}
           setState={setEmail}
           placeholder="YourEmail@gmail.com"
+        />
+        <Input
+          label="Password"
+          state={password}
+          setState={setPassword}
+          placeholder="Your Password"
+        />
+        <Input
+          label="Confirm Password"
+          state={confirmPassword}
+          setState={setConfirmPassword}
+          placeholder=" Confirm Your Password"
         />
         <button className="w-full px-4 py-2 mt-4 text-lg font-semibold text-white transition-all bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-4 focus:ring-indigo-300">
           Sign Up
