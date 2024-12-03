@@ -44,7 +44,7 @@ function SignUpSignIn() {
         />
         <Button buttonLabel="Sign Up" isPrimary={true} />
         <p className="text-center">or</p>
-        <Button buttonLabel="SignUp with Google" isPrimary={false} />
+        <Button buttonLabel="SignUp with Google" />
         <p className="mt-6 text-sm text-center text-gray-600">
           Already have an account?
           <a href="#" className="font-medium text-indigo-600 hover:underline">
