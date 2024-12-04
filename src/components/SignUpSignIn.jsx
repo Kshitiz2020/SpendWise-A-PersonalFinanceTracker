@@ -2,12 +2,38 @@ import Input from "./Input";
 import Button from "./Button";
 import { useState } from "react";
 import SignUp from "../pages/SignUp";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth } from "../../firebase";
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  // function to signupwithemail
+  function signUpWithEmail() {
+    //authenticate the user, or basically create a new account using email and password
+
+    if (name != "" && password != "" && confirmPassword != "") {
+      const auth = getAuth();
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          // Signed up
+          const user = userCredential.user;
+          // ...
+          toast.success("You are in!");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toast.error(errorMessage);
+          // ..
+        });
+    } else {
+      toast.err("All fields are mandatory,Please fill it!");
+    }
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-500 to-indigo-600">
@@ -32,17 +58,23 @@ function SignUpSignIn() {
         />
         <Input
           label="Password"
+          type="password"
           state={password}
           setState={setPassword}
           placeholder="Your Password"
         />
         <Input
           label="Confirm Password"
+          type="password"
           state={confirmPassword}
           setState={setConfirmPassword}
           placeholder=" Confirm Your Password"
         />
-        <Button buttonLabel="Sign Up" isPrimary={true} />
+        <Button
+          buttonLabel="Sign Up"
+          isPrimary={true}
+          onClick={signUpWithEmail}
+        />
         <p className="text-center">or</p>
         <Button buttonLabel="SignUp with Google" />
         <p className="mt-6 text-sm text-center text-gray-600">
