@@ -1,3 +1,4 @@
+import React from "react";
 function Input({ label, state, setState, placeholder }) {
   return (
     <div className="mb-4">

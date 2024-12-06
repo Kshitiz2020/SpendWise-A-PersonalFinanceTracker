@@ -1,9 +1,11 @@
+import React from "react";
 import Input from "./Input";
 import Button from "./Button";
 import { useState } from "react";
 import SignUp from "../pages/SignUp";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase";
+import { ToastContainer, toast } from "react-toastify";
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -16,7 +18,6 @@ function SignUpSignIn() {
     //authenticate the user, or basically create a new account using email and password
 
     if (name != "" && password != "" && confirmPassword != "") {
-      const auth = getAuth();
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
           // Signed up
