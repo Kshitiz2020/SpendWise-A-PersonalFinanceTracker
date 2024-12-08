@@ -1,10 +1,10 @@
 import React from "react";
-function Input({ label, state, setState, placeholder, password }) {
+function Input({ label, state, setState, placeholder, password, type }) {
   return (
     <div className="mb-4">
       <label className="block text-sm font-medium text-gray-700">{label}</label>
       <input
-        type="password"
+        type={type}
         value={state}
         onChange={(e) => setState(e.target.value)}
         placeholder={placeholder}

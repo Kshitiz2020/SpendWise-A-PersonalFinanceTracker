@@ -46,12 +46,14 @@ function SignUpSignIn() {
           Manage your finances effortlessly.
         </p>
         <Input
+          type="text"
           label="Full Name"
           state={name}
           setState={setName}
           placeholder="Your Name"
         />
         <Input
+          type="text"
           label="Email"
           state={email}
           setState={setEmail}
