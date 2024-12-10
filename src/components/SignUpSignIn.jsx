@@ -45,13 +45,16 @@ function SignUpSignIn() {
             // ..
           });
       } else {
-        toast.error("password and confirm password doesnot match");
+        toast.error("password and confirm password doesn't match");
       }
     } else {
       setLoading(false);
       toast.err("All fields are mandatory,Please fill it!");
     }
   }
+
+  // login form Function  with emaileeeeeeeeee
+  function loginWithEmail() {}
 
   function createDoc(user) {
     //make sure doc with same user id doesnt exist
@@ -85,7 +88,9 @@ function SignUpSignIn() {
             />
 
             <Button
-              buttonLabel={loading ? "Loading..." : "Login"}
+              buttonLabel={
+                loading ? "Loading..." : "Login With Email & Password"
+              }
               isPrimary={true}
               onClick={signUpWithEmail}
               disabled={loading}
@@ -93,15 +98,18 @@ function SignUpSignIn() {
             <p className="text-center">or</p>
             <Button
               disabled={loading}
-              buttonLabel={loading ? "Loading..." : "SignUp with Google"}
+              buttonLabel={loading ? "Loading..." : "LogIn with Google"}
             />
             <p className="mt-6 text-sm text-center text-gray-600">
-              Already have an account?
+              Don't have an account?
               <a
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
+                onClick={() => {
+                  setLogin(!false);
+                }}
               >
-                Log In
+                SignUp
               </a>
             </p>
           </div>
@@ -159,6 +167,9 @@ function SignUpSignIn() {
               <a
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
+                onClick={() => {
+                  setLogin(!false);
+                }}
               >
                 Log In
               </a>
