@@ -106,7 +106,7 @@ function SignUpSignIn() {
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
                 onClick={() => {
-                  setLogin(!false);
+                  setLogin(false);
                 }}
               >
                 SignUp
@@ -168,7 +168,7 @@ function SignUpSignIn() {
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
                 onClick={() => {
-                  setLogin(!false);
+                  setLogin(true);
                 }}
               >
                 Log In
