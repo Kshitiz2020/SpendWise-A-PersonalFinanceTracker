@@ -2,7 +2,6 @@ import React from "react";
 function Button({ buttonLabel, onClick, isPrimary, disabled }) {
   return (
     <button
-      buttonLabel={buttonLabel}
       onClick={onClick}
       disabled={disabled}
       className={`w-full px-4 py-2 mt-4 text-lg font-semibold rounded-md focus:outline-none focus:ring-4 transition-all ${
