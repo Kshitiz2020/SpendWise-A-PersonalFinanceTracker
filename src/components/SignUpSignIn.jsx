@@ -3,7 +3,10 @@ import Input from "./Input";
 import Button from "./Button";
 import { useState } from "react";
 import SignUp from "../pages/SignUp";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+} from "firebase/auth";
 import { auth } from "../../firebase";
 import { ToastContainer, toast } from "react-toastify";
 import { use } from "react";
@@ -20,7 +23,7 @@ function SignUpSignIn() {
   function signUpWithEmail() {
     //authenticate the user, or basically create a new account using email and password
     setLoading(true);
-    if (name != "" && password != "" && confirmPassword != "") {
+    if (name != "" && email != "" && password != "" && confirmPassword != "") {
       if (password == confirmPassword) {
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
@@ -49,15 +52,37 @@ function SignUpSignIn() {
       }
     } else {
       setLoading(false);
-      toast.err("All fields are mandatory,Please fill it!");
+      toast.error("All fields are mandatory,Please fill it!");
     }
+    console.log("first");
   }
 
-  // login form Function  with emaileeeeeeeeee
-  function loginWithEmail() {}
+  // login form Function  with email/*
+  function loginWithEmail() {
+    if (email != "" && password != "") {
+      signInWithEmailAndPassword(email, password)
+        .then((userCredential) => {
+          // Signed in
+          const user = userCredential.user;
+          // ...
+          toast.success("logged in");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          const errorMessage = error.message;
+          toast.error(error.message);
+        });
+    } else {
+      toast.error("check all the fields");
+    }
+    console.log("clicked");
+  }
+
+  // signUp form Function  with email
+  //function signUpWithEmail() {}
 
   function createDoc(user) {
-    //make sure doc with same user id doesnt exist
+    //make sure doc with same user id doesn't exist
     //create doc
   }
   return (
@@ -92,7 +117,7 @@ function SignUpSignIn() {
                 loading ? "Loading..." : "Login With Email & Password"
               }
               isPrimary={true}
-              onClick={signUpWithEmail}
+              onClick={loginWithEmail}
               disabled={loading}
             />
             <p className="text-center">or</p>
