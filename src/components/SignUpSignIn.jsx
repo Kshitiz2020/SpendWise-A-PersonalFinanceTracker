@@ -90,26 +90,29 @@ function SignUpSignIn() {
   // signUp form Function  with email
   const provider = new GoogleAuthProvider();
   function signInWithGoogle() {
-    const auth = getAuth();
+    // Handle loading state before the sign-in starts
+    setLoading(true);
+
+    // Use async/await to handle the sign-in process
     signInWithPopup(auth, provider)
       .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
         const credential = GoogleAuthProvider.credentialFromResult(result);
         const token = credential.accessToken;
-        // The signed-in user info.
         const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
+
+        // Successfully signed in
+        toast.success("User authenticated!");
+
+        // Handle post-authentication actions here
       })
       .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
+        // Handle Errors
         const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
+        toast.error(errorMessage);
+      })
+      .finally(() => {
+        // Always set loading to false, whether success or error
+        setLoading(false);
       });
   }
 
@@ -184,6 +187,7 @@ function SignUpSignIn() {
               disabled={loading}
               buttonLabel={loading ? "Loading..." : "LogIn with Google"}
             />
+
             <p className="mt-6 text-sm text-center text-gray-600">
               Don't have an account?
               <a
@@ -244,7 +248,7 @@ function SignUpSignIn() {
             <p className="text-center">or</p>
             <Button
               disabled={loading}
-              onClick={signInWithGoogle()}
+              onClick={signInWithGoogle}
               buttonLabel={loading ? "Loading..." : "SignUp with Google"}
             />
             <p className="mt-6 text-sm text-center text-gray-600">
