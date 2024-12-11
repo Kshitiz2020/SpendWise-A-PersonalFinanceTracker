@@ -7,9 +7,12 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import { auth } from "../../firebase";
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { auth, db } from "../../firebase";
 import { ToastContainer, toast } from "react-toastify";
-import { use } from "react";
+import { useRef } from "react";
+import Dashboard from "../pages/Dashboard";
+import { useNavigate } from "react-router-dom";
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -18,6 +21,7 @@ function SignUpSignIn() {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [logIn, setLogin] = useState(false);
+  const navigate = useNavigate();
 
   // function to signupwithemail
   function signUpWithEmail() {
@@ -29,7 +33,7 @@ function SignUpSignIn() {
           .then((userCredential) => {
             // Signed up
             const user = userCredential.user;
-            // ...
+
             toast.success("You are in!");
             setLoading(false);
             setName("");
@@ -37,6 +41,7 @@ function SignUpSignIn() {
             setPassword("");
             setConfirmPassword("");
             createDoc(user);
+            navigate("/dashboard");
 
             // creating the doc with the user id as following id
           })
@@ -59,21 +64,25 @@ function SignUpSignIn() {
 
   // login form Function  with email/*
   function loginWithEmail() {
+    setLoading(true);
     if (email != "" && password != "") {
       signInWithEmailAndPassword(email, password)
         .then((userCredential) => {
           // Signed in
           const user = userCredential.user;
-          // ...
+          navigate("/dashboard");
+          setLoading(false);
           toast.success("logged in");
         })
         .catch((error) => {
           const errorCode = error.code;
           const errorMessage = error.message;
           toast.error(error.message);
+          setLoading(false);
         });
     } else {
       toast.error("check all the fields");
+      setLoading(false);
     }
     console.log("clicked");
   }
@@ -81,10 +90,36 @@ function SignUpSignIn() {
   // signUp form Function  with email
   //function signUpWithEmail() {}
 
-  function createDoc(user) {
+  async function createDoc(user) {
     //make sure doc with same user id doesn't exist
     //create doc
+    if (!user) return;
+    const userRef = doc(db, "users", user.uid);
+    const userData = await getDoc(userRef);
+
+    if (!userData.exists()) {
+      const { displayName, email, photoURL } = user;
+      const createdAt = new Date();
+      try {
+        await setDoc(doc(db, "users", user.uid), {
+          name: user.displayName ? user.displayName : name,
+          email,
+          photoURL: user.photoURL ? user.photoURL : "",
+          createdAt: new Date(),
+        });
+        toast.success("Doc created!!!");
+        setLoading(false);
+      } catch (e) {
+        toast.error(e.message);
+        //console.error("Error writing document: ", e);
+        setLoading(false);
+      }
+    } else {
+      toast.error("User already exist🙁 ");
+      setLoading(false);
+    }
   }
+
   return (
     <>
       {logIn ? (
@@ -202,6 +237,7 @@ function SignUpSignIn() {
           </div>
         </div>
       )}
+      <Dashboard />
     </>
   );
 }
