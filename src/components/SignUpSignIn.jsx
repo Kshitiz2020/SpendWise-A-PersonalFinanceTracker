@@ -13,7 +13,7 @@ import { ToastContainer, toast } from "react-toastify";
 import { useRef } from "react";
 import Dashboard from "../pages/Dashboard";
 import { useNavigate } from "react-router-dom";
-
+import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 function SignUpSignIn() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -88,7 +88,30 @@ function SignUpSignIn() {
   }
 
   // signUp form Function  with email
-  //function signUpWithEmail() {}
+  const provider = new GoogleAuthProvider();
+  function signInWithGoogle() {
+    const auth = getAuth();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
 
   async function createDoc(user) {
     //make sure doc with same user id doesn't exist
@@ -157,6 +180,7 @@ function SignUpSignIn() {
             />
             <p className="text-center">or</p>
             <Button
+              onClick={signInWithGoogle()}
               disabled={loading}
               buttonLabel={loading ? "Loading..." : "LogIn with Google"}
             />
@@ -220,6 +244,7 @@ function SignUpSignIn() {
             <p className="text-center">or</p>
             <Button
               disabled={loading}
+              onClick={signInWithGoogle()}
               buttonLabel={loading ? "Loading..." : "SignUp with Google"}
             />
             <p className="mt-6 text-sm text-center text-gray-600">
