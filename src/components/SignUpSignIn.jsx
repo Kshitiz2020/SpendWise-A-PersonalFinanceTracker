@@ -183,7 +183,7 @@ function SignUpSignIn() {
             />
             <p className="text-center">or</p>
             <Button
-              onClick={signInWithGoogle()}
+              onClick={signInWithGoogle}
               disabled={loading}
               buttonLabel={loading ? "Loading..." : "LogIn with Google"}
             />
@@ -266,7 +266,6 @@ function SignUpSignIn() {
           </div>
         </div>
       )}
-      <Dashboard />
     </>
   );
 }
