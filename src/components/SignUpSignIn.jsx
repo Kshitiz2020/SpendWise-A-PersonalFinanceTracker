@@ -101,7 +101,7 @@ function SignUpSignIn() {
         const user = result.user;
 
         // Successfully signed in
-        // toast.success("User authenticated!");
+        toast.success("User authenticated!");
 
         // Handle post-authentication actions here
       })
