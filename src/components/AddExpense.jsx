@@ -10,9 +10,9 @@ import {
   DatePicker,
   Select,
 } from "antd";
-function AddExpenseModal({
-  isExpenseModalVisible,
-  handleExpenseCancel,
+function AddExpensesModal({
+  isExpensesModalVisible,
+  handleExpensesCancel,
   onFinish,
 }) {
   const [form] = Form.useForm();
@@ -20,8 +20,8 @@ function AddExpenseModal({
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Expense"
-      open={isExpenseModalVisible}
-      onCancel={handleExpenseCancel}
+      open={isExpensesModalVisible}
+      onCancel={handleExpensesCancel}
       footer={null}
     >
       <Form
@@ -75,7 +75,6 @@ function AddExpenseModal({
             <Select.Option value="food">Food</Select.Option>
             <Select.Option value="education">Education</Select.Option>
             <Select.Option value="office">Office</Select.Option>
-            {/* Add more tags here */}
           </Select>
         </Form.Item>
         <Form.Item>
@@ -88,4 +87,4 @@ function AddExpenseModal({
   );
 }
 
-export default AddExpenseModal;
+export default AddExpensesModal;
