@@ -28,8 +28,22 @@ function Dashboard() {
         handleExpensesCancel={handleExpensesCancel}
         handleIncomeCancel={handleIncomeCancel}
       />
-      <Modal open={isIncomeModalVisible}>Income</Modal>
-      <Modal open={isExpensesModalVisible}>Expense</Modal>
+      <Modal
+        open={isIncomeModalVisible}
+        title="Add Income"
+        onCancel={() => setIsIncomeModalVisible(false)}
+        footer={null}
+      >
+        Income
+      </Modal>
+      <Modal
+        open={isExpensesModalVisible}
+        title="Add Expense"
+        onCancel={() => setIsExpensesModalVisible(false)}
+        footer={null}
+      >
+        Expense
+      </Modal>
     </div>
   );
 }
