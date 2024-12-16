@@ -79,10 +79,10 @@ function Dashboard() {
     };
   };
 
-  /*  useEffect(() => {
+  useEffect(() => {
     //GEt all docs from a collection
     fetchTransactions();
-  }, []); */
+  }, []);
 
   useEffect(() => {
     calculateBalance();
@@ -122,6 +122,23 @@ function Dashboard() {
         toast.error("Couldn't add transaction");
       }
     }
+  }
+
+  //fetch transaction
+  async function fetchTransactions() {
+    setLoading(true);
+    if (user) {
+      const q = query(collection(db, `users/${user.uid}/transactions`));
+      const querySnapshot = await getDocs(q);
+      let transactionsArray = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        transactionsArray.push(doc.data());
+      });
+      setTransactions(transactionsArray);
+      toast.success("Transactions Fetched!");
+    }
+    setLoading(false);
   }
 
   return (
