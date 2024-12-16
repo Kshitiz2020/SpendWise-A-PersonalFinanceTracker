@@ -98,6 +98,9 @@ function Dashboard() {
         expensesTotal += transaction.amount;
       }
     });
+    setIncome(incomeTotal);
+    setExpenses(expensesTotal);
+    setTotalBalance(incomeTotal - expensesTotal);
   }
 
   //add transaction
