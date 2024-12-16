@@ -1,19 +1,59 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Cards from "../components/Cards";
 import { Modal } from "antd";
 import AddExpensesModal from "../components/AddExpense";
 import AddIncomeModal from "../components/AddIncome";
 import { addDoc, collection } from "firebase/firestore";
-import { db } from "../firebase";
+import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
 
 function Dashboard() {
+  /* const sampleTransactions = [
+    {
+      name: "Freelance Payment",
+      type: "income",
+      date: "2023-02-10",
+      amount: 1500,
+      tag: "freelance",
+    },
+    {
+      name: "Groceries",
+      type: "expense",
+      date: "2023-02-12",
+      amount: 200,
+      tag: "food",
+    },
+    {
+      name: "Gym Membership",
+      type: "expense",
+      date: "2023-02-15",
+      amount: 50,
+      tag: "health",
+    },
+    {
+      name: "Car Maintenance",
+      type: "expense",
+      date: "2023-02-18",
+      amount: 300,
+      tag: "transportation",
+    },
+    {
+      name: "Bonus",
+      type: "income",
+      date: "2023-02-20",
+      amount: 800,
+      tag: "bonus",
+    },
+  ]; */
+
   const [user] = useAuthState(auth);
   const [isExpensesModalVisible, setIsExpensesModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
-
+  const [income, setIncome] = useState(0);
+  const [expenses, setExpenses] = useState(0);
+  const [totalBalance, setTotalBalance] = useState(0);
   const showExpensesModal = () => {
     setIsExpensesModalVisible(true);
   };
@@ -36,6 +76,29 @@ function Dashboard() {
       name: values.name,
     };
   };
+
+  useEffect(() => {
+    //GEt all docs from a collection
+    fetchTransactions();
+  }, []);
+
+  useEffect(() => {
+    calculateBalance();
+  }, [transactions]);
+
+  // calculate balance
+  function calculateBalance() {
+    let incomeTotal = 0;
+    let expensesTotal = 0;
+
+    transactions.forEach((transaction) => {
+      if (transaction.type === "income") {
+        incomeTotal += transaction.amount;
+      } else {
+        expensesTotal += transaction.amount;
+      }
+    });
+  }
 
   //add transaction
   async function addTransaction(transaction, many) {
