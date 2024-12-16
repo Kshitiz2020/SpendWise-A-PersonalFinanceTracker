@@ -4,8 +4,12 @@ import Cards from "../components/Cards";
 import { Modal } from "antd";
 import AddExpensesModal from "../components/AddExpense";
 import AddIncomeModal from "../components/AddIncome";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "../firebase";
+import { useAuthState } from "react-firebase-hooks/auth";
 
 function Dashboard() {
+  const [user] = useAuthState(auth);
   const [isExpensesModalVisible, setIsExpensesModalVisible] = useState(false);
   const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
 
@@ -22,10 +26,29 @@ function Dashboard() {
     setIsIncomeModalVisible(false);
   };
 
-  const onFinish = (values, type) => {};
+  const onFinish = (values, type) => {  const newTransaction = {
+    type: type,
+    date: moment(values.date).format("YYYY-MM-DD"),
+    amount: parseFloat(values.amount),
+    tag: values.tag,
+    name: values.name,};
 
   //add transaction
-  async function addTransaction(transaction, many) {}
+  async function addTransaction(transaction, many) {try {
+    const docRef = await addDoc(
+      collection(db, `users/${user.uid}/transactions`),
+      transaction
+    );
+    console.log("Document written with ID: ", docRef.id);
+    if (!many) {
+      toast.success("Transaction Added!");
+    }
+  } catch (e) {
+    console.error("Error adding document: ", e);
+    if (!many) {
+      toast.error("Couldn't add transaction");
+    }
+  }}
 
   return (
     <div>
