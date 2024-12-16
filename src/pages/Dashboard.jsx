@@ -22,9 +22,11 @@ function Dashboard() {
     setIsIncomeModalVisible(false);
   };
 
-  const onFinish = () => {
-    console.log("onFinish", values, type);
-  };
+  const onFinish = (values, type) => {};
+
+  //add transaction
+  async function addTransaction(transaction, many) {}
+
   return (
     <div>
       <Header />
