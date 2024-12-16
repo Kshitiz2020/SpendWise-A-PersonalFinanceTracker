@@ -54,6 +54,7 @@ function Dashboard() {
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
+  const [transactions, setTransactions] = useState([]);
   const showExpensesModal = () => {
     setIsExpensesModalVisible(true);
   };
@@ -77,10 +78,10 @@ function Dashboard() {
     };
   };
 
-  useEffect(() => {
+  /*  useEffect(() => {
     //GEt all docs from a collection
     fetchTransactions();
-  }, []);
+  }, []); */
 
   useEffect(() => {
     calculateBalance();
@@ -128,8 +129,9 @@ function Dashboard() {
       <Cards
         showExpensesModal={showExpensesModal}
         showIncomeModal={showIncomeModal}
-        handleExpensesCancel={handleExpensesCancel}
-        handleIncomeCancel={handleIncomeCancel}
+        income={income}
+        expenses={expenses}
+        totalBalance={totalBalance}
       />
       <Modal
         open={isIncomeModalVisible}
