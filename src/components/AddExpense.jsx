@@ -2,7 +2,7 @@ import React from "react";
 import { Modal, Form, Input, DatePicker, Select, Button } from "antd";
 
 function AddExpensesModal({
-  isExpensesModalVisible,
+  isExpensesModalopen,
   handleExpensesCancel,
   onFinish,
 }) {
@@ -10,7 +10,7 @@ function AddExpensesModal({
   return (
     <Modal
       title="Add Expense"
-      visible={isExpensesModalVisible}
+      open={isExpensesModalopen}
       onCancel={handleExpensesCancel}
       footer={null}
       className="font-semibold text-gray-900"

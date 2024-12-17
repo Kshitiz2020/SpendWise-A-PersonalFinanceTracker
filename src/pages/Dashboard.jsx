@@ -50,24 +50,24 @@ function Dashboard() {
   ]; */
 
   const [user] = useAuthState(auth);
-  const [isExpensesModalVisible, setIsExpensesModalVisible] = useState(false);
-  const [isIncomeModalVisible, setIsIncomeModalVisible] = useState(false);
+  const [isExpensesModalopen, setIsExpensesModalopen] = useState(false);
+  const [isIncomeModalopen, setIsIncomeModalopen] = useState(false);
   const [income, setIncome] = useState(0);
   const [expenses, setExpenses] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
   const showExpensesModal = () => {
-    setIsExpensesModalVisible(true);
+    setIsExpensesModalopen(true);
   };
   const showIncomeModal = () => {
-    setIsIncomeModalVisible(true);
+    setIsIncomeModalopen(true);
   };
   const handleExpensesCancel = () => {
-    setIsExpensesModalVisible(false);
+    setIsExpensesModalopen(false);
   };
   const handleIncomeCancel = () => {
-    setIsIncomeModalVisible(false);
+    setIsIncomeModalopen(false);
   };
 
   const onFinish = (values, type) => {
@@ -153,28 +153,28 @@ function Dashboard() {
         totalBalance={totalBalance}
       />
       <Modal
-        open={isIncomeModalVisible}
+        open={isIncomeModalopen}
         title="Add Income"
-        onCancel={() => setIsIncomeModalVisible(false)}
+        onCancel={() => setIsIncomeModalopen(false)}
         footer={null}
       >
         Income
       </Modal>
       <Modal
-        open={isExpensesModalVisible}
+        open={isExpensesModalopen}
         title="Add Expense"
-        onCancel={() => setIsExpensesModalVisible(false)}
+        onCancel={() => setIsExpensesModalopen(false)}
         footer={null}
       >
         Expense
       </Modal>
       <AddExpensesModal
-        isExpensesModalVisible={isExpensesModalVisible}
+        isExpensesModalopen={isExpensesModalopen}
         handleExpensesCancel={handleExpensesCancel}
         onFinish={onFinish}
       />
       <AddIncomeModal
-        isIncomeModalVisible={isIncomeModalVisible}
+        isIncomeModalopen={isIncomeModalopen}
         handleIncomeCancel={handleIncomeCancel}
         onFinish={onFinish}
       />

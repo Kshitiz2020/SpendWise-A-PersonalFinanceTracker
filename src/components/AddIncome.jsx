@@ -11,17 +11,13 @@ import {
   Select,
 } from "antd";
 
-function AddIncomeModal({
-  isIncomeModalVisible,
-  handleIncomeCancel,
-  onFinish,
-}) {
+function AddIncomeModal({ isIncomeModalopen, handleIncomeCancel, onFinish }) {
   const [form] = Form.useForm();
   return (
     <Modal
       style={{ fontWeight: 600 }}
       title="Add Income"
-      open={isIncomeModalVisible}
+      open={isIncomeModalopen}
       onCancel={handleIncomeCancel}
       footer={null}
     >

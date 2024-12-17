@@ -5,11 +5,13 @@ import search from "../assets/search.svg";
 import { parse } from "papaparse";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import PropTypes from "prop-types";
+
 const { Search } = Input;
 const { Option } = Select;
 
 const TransactionSearch = ({
-  transactions,
+  transactions = [], // Default to an empty array if undefined
   exportToCsv,
   addTransaction,
   fetchTransactions,
@@ -74,7 +76,7 @@ const TransactionSearch = ({
     },
   ];
 
-  const filteredTransactions = transactions.filter((transaction) => {
+  const filteredTransactions = (transactions || []).filter((transaction) => {
     const searchMatch = searchTerm
       ? transaction.name.toLowerCase().includes(searchTerm.toLowerCase())
       : true;
@@ -166,6 +168,13 @@ const TransactionSearch = ({
       </div>
     </div>
   );
+};
+
+TransactionSearch.propTypes = {
+  transactions: PropTypes.array,
+  exportToCsv: PropTypes.func.isRequired,
+  addTransaction: PropTypes.func.isRequired,
+  fetchTransactions: PropTypes.func.isRequired,
 };
 
 export default TransactionSearch;
