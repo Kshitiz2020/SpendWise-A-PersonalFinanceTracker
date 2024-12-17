@@ -100,30 +100,18 @@ const TransactionSearch = ({
   }));
 
   return (
-    <div
-      style={{
-        width: "100%",
-        padding: "0rem 2rem",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          gap: "1rem",
-          alignItems: "center",
-          marginBottom: "1rem",
-        }}
-      >
-        <div className="input-flex">
-          <img src={search} width="16" />
+    <div className="w-full px-8 sm:px-4">
+      <div className="flex flex-col gap-4 mb-4 md:flex-row md:justify-between md:items-center">
+        <div className="flex items-center gap-2 px-3 py-2 border border-gray-300 rounded input-flex">
+          <img src={search} className="w-4 h-4" alt="search icon" />
           <input
+            className="flex-grow outline-none"
             placeholder="Search by Name"
             onChange={(e) => setSearchTerm(e.target.value)}
           />
         </div>
         <Select
-          className="select-input"
+          className="w-full select-input md:w-48"
           onChange={(value) => setTypeFilter(value)}
           value={typeFilter}
           placeholder="Filter"
@@ -135,28 +123,11 @@ const TransactionSearch = ({
         </Select>
       </div>
 
-      {/* <Select
-        style={{ width: 200, marginRight: 10 }}
-        onChange={(value) => setSelectedTag(value)}
-        placeholder="Filter by tag"
-        allowClear
-      >
-        <Option value="food">Food</Option>
-        <Option value="education">Education</Option>
-        <Option value="office">Office</Option>
-      </Select> */}
       <div className="my-table">
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            width: "100%",
-            marginBottom: "1rem",
-          }}
-        >
-          <h2>My Transactions</h2>
-
+        <div className="flex flex-col w-full mb-4 md:flex-row md:justify-between md:items-center">
+          <h2 className="mb-2 text-lg font-semibold md:mb-0">
+            My Transactions
+          </h2>
           <Radio.Group
             className="input-radio"
             onChange={(e) => setSortKey(e.target.value)}
@@ -166,32 +137,32 @@ const TransactionSearch = ({
             <Radio.Button value="date">Sort by Date</Radio.Button>
             <Radio.Button value="amount">Sort by Amount</Radio.Button>
           </Radio.Group>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: "1rem",
-              width: "400px",
-            }}
-          >
-            <button className="btn" onClick={exportToCsv}>
-              Export to CSV
-            </button>
-            <label for="file-csv" className="btn btn-blue">
-              Import from CSV
-            </label>
-            <input
-              onChange={importFromCsv}
-              id="file-csv"
-              type="file"
-              accept=".csv"
-              required
-              style={{ display: "none" }}
-            />
-          </div>
         </div>
 
-        <Table columns={columns} dataSource={dataSource} />
+        <div className="flex flex-wrap justify-center gap-4 mb-4 md:justify-start">
+          <button
+            className="px-4 py-2 bg-gray-300 rounded btn hover:bg-gray-400"
+            onClick={exportToCsv}
+          >
+            Export to CSV
+          </button>
+          <label
+            htmlFor="file-csv"
+            className="px-4 py-2 text-white bg-blue-500 rounded cursor-pointer btn btn-blue hover:bg-blue-600"
+          >
+            Import from CSV
+          </label>
+          <input
+            onChange={importFromCsv}
+            id="file-csv"
+            type="file"
+            accept=".csv"
+            required
+            className="hidden"
+          />
+        </div>
+
+        <Table className="w-full" columns={columns} dataSource={dataSource} />
       </div>
     </div>
   );
