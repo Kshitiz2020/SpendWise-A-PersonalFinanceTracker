@@ -56,6 +56,7 @@ function Dashboard() {
   const [expenses, setExpenses] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
+  const [loading, setLoading] = useState(false);
   const showExpensesModal = () => {
     setIsExpensesModalVisible(true);
   };
