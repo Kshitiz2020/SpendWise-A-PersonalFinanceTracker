@@ -4,7 +4,7 @@ import Cards from "../components/Cards";
 import { Modal } from "antd";
 import AddExpensesModal from "../components/AddExpense";
 import AddIncomeModal from "../components/AddIncome";
-import { addDoc, collection } from "firebase/firestore";
+import { addDoc, collection, query, getDocs } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
@@ -13,44 +13,6 @@ import Charts from "../components/Charts";
 import Null from "../components/Null";
 
 function Dashboard() {
-  /* const sampleTransactions = [
-    {
-      name: "Freelance Payment",
-      type: "income",
-      date: "2023-02-10",
-      amount: 1500,
-      tag: "freelance",
-    },
-    {
-      name: "Groceries",
-      type: "expense",
-      date: "2023-02-12",
-      amount: 200,
-      tag: "food",
-    },
-    {
-      name: "Gym Membership",
-      type: "expense",
-      date: "2023-02-15",
-      amount: 50,
-      tag: "health",
-    },
-    {
-      name: "Car Maintenance",
-      type: "expense",
-      date: "2023-02-18",
-      amount: 300,
-      tag: "transportation",
-    },
-    {
-      name: "Bonus",
-      type: "income",
-      date: "2023-02-20",
-      amount: 800,
-      tag: "bonus",
-    },
-  ]; */
-
   const [user] = useAuthState(auth);
   const [isExpensesModalopen, setIsExpensesModalopen] = useState(false);
   const [isIncomeModalopen, setIsIncomeModalopen] = useState(false);
@@ -59,6 +21,8 @@ function Dashboard() {
   const [totalBalance, setTotalBalance] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(false);
+
+  // Show and Hide Modals
   const showExpensesModal = () => {
     setIsExpensesModalopen(true);
   };
@@ -80,10 +44,11 @@ function Dashboard() {
       tag: values.tag,
       name: values.name,
     };
+    addTransaction(newTransaction, false);
   };
 
   useEffect(() => {
-    //GEt all docs from a collection
+    // Fetch all docs from a collection
     fetchTransactions();
   }, []);
 
@@ -91,7 +56,7 @@ function Dashboard() {
     calculateBalance();
   }, [transactions]);
 
-  // calculate balance
+  // Calculate balance
   function calculateBalance() {
     let incomeTotal = 0;
     let expensesTotal = 0;
@@ -108,7 +73,7 @@ function Dashboard() {
     setTotalBalance(incomeTotal - expensesTotal);
   }
 
-  //add transaction
+  // Add transaction
   async function addTransaction(transaction, many) {
     try {
       const docRef = await addDoc(
@@ -127,7 +92,7 @@ function Dashboard() {
     }
   }
 
-  //fetch transaction
+  // Fetch transactions
   async function fetchTransactions() {
     setLoading(true);
     if (user) {
@@ -135,7 +100,6 @@ function Dashboard() {
       const querySnapshot = await getDocs(q);
       let transactionsArray = [];
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
         transactionsArray.push(doc.data());
       });
       setTransactions(transactionsArray);
@@ -155,12 +119,13 @@ function Dashboard() {
         totalBalance={totalBalance}
       />
 
-      {/*  {transactions.length != 0 ? <Charts /> : <Null />} */}
-      <Charts />
+      {/* Render charts if there are transactions */}
+      {transactions.length !== 0 ? <Charts /> : <Null />}
+
       <Modal
         open={isIncomeModalopen}
         title="Add Income"
-        onCancel={() => setIsIncomeModalopen(false)}
+        onCancel={handleIncomeCancel}
         footer={null}
       >
         Income
@@ -168,7 +133,7 @@ function Dashboard() {
       <Modal
         open={isExpensesModalopen}
         title="Add Expense"
-        onCancel={() => setIsExpensesModalopen(false)}
+        onCancel={handleExpensesCancel}
         footer={null}
       >
         Expense
@@ -183,8 +148,9 @@ function Dashboard() {
         handleIncomeCancel={handleIncomeCancel}
         onFinish={onFinish}
       />
-      <TransactionsTable transaction={transactions} />
+      <TransactionsTable transactions={transactions} />
     </div>
   );
 }
+
 export default Dashboard;
