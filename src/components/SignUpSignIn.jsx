@@ -1,19 +1,17 @@
-import React from "react";
+import React, { useState } from "react";
 import Input from "./Input";
 import Button from "./Button";
-import { useState } from "react";
-import SignUp from "../pages/SignUp";
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
+  signInWithPopup,
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "../../firebase";
-import { ToastContainer, toast } from "react-toastify";
-import { useRef } from "react";
-import Dashboard from "../pages/Dashboard";
+import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import { getAuth, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider } from "firebase/auth";
+
 function SignUpSignIn() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,129 +20,96 @@ function SignUpSignIn() {
   const [loading, setLoading] = useState(false);
   const [logIn, setLogin] = useState(false);
   const navigate = useNavigate();
-
-  // function to signupwithemail
-  function signUpWithEmail() {
-    //authenticate the user, or basically create a new account using email and password
-    setLoading(true);
-    if (name != "" && email != "" && password != "" && confirmPassword != "") {
-      if (password == confirmPassword) {
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // Signed up
-            const user = userCredential.user;
-
-            toast.success("You are in!");
-            setLoading(false);
-            setName("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
-            createDoc(user);
-            navigate("/dashboard");
-
-            // creating the doc with the user id as following id
-          })
-          .catch((error) => {
-            setLoading(false);
-            const errorCode = error.code;
-            const errorMessage = error.message;
-            toast.error(errorMessage);
-            // ..
-          });
-      } else {
-        toast.error("password and confirm password doesn't match");
-      }
-    } else {
-      setLoading(false);
-      toast.error("All fields are mandatory,Please fill it!");
-    }
-    console.log("first");
-  }
-
-  // login form Function  with email/*
-  function loginWithEmail() {
-    setLoading(true);
-    if (email != "" && password != "") {
-      signInWithEmailAndPassword(email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          navigate("/dashboard");
-          setLoading(false);
-          toast.success("logged in");
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          toast.error(error.message);
-          setLoading(false);
-        });
-    } else {
-      toast.error("check all the fields");
-      setLoading(false);
-    }
-    console.log("clicked");
-  }
-
-  // signUp form Function  with email
   const provider = new GoogleAuthProvider();
-  function signInWithGoogle() {
-    // Handle loading state before the sign-in starts
-    setLoading(true);
 
-    // Use async/await to handle the sign-in process
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        const user = result.user;
-
-        // Successfully signed in
-        toast.success("User authenticated!");
-
-        // Handle post-authentication actions here
-      })
-      .catch((error) => {
-        // Handle Errors
-        const errorMessage = error.message;
-        toast.error(errorMessage);
-      })
-      .finally(() => {
-        // Always set loading to false, whether success or error
-        setLoading(false);
-      });
-  }
-
-  async function createDoc(user) {
-    //make sure doc with same user id doesn't exist
-    //create doc
+  // Centralized user document creation
+  const createUserDocument = async (user) => {
     if (!user) return;
+
     const userRef = doc(db, "users", user.uid);
     const userData = await getDoc(userRef);
 
     if (!userData.exists()) {
-      const { displayName, email, photoURL } = user;
-      const createdAt = new Date();
       try {
-        await setDoc(doc(db, "users", user.uid), {
-          name: user.displayName ? user.displayName : name,
-          email,
-          photoURL: user.photoURL ? user.photoURL : "",
+        await setDoc(userRef, {
+          name: user.displayName || name,
+          email: user.email,
+          photoURL: user.photoURL || "",
           createdAt: new Date(),
         });
-        toast.success("Doc created!!!");
-        setLoading(false);
-      } catch (e) {
-        toast.error(e.message);
-        //console.error("Error writing document: ", e);
-        setLoading(false);
+        toast.success("Account Created Successfully!");
+      } catch (error) {
+        toast.error(`Document creation error: ${error.message}`);
+        console.error("Error creating user document", error);
       }
-    } else {
-      toast.error("User already exist🙁 ");
+    }
+  };
+
+  // Unified authentication method
+  const handleAuthentication = async (isLogin = false) => {
+    setLoading(true);
+    try {
+      // Validate inputs
+      if (!isLogin && password !== confirmPassword) {
+        toast.error("Passwords do not match");
+        setLoading(false);
+        return;
+      }
+
+      if (!email || !password) {
+        toast.error("Please fill in all required fields");
+        setLoading(false);
+        return;
+      }
+
+      // Choose authentication method based on login status
+      const authMethod = isLogin
+        ? signInWithEmailAndPassword
+        : createUserWithEmailAndPassword;
+
+      const userCredential = await authMethod(auth, email, password);
+      const user = userCredential.user;
+
+      // Create user document for signup
+      if (!isLogin) {
+        await createUserDocument(user);
+      }
+
+      // Navigate and show success message
+      navigate("/dashboard");
+      toast.success(
+        isLogin ? "Logged in successfully!" : "Account created successfully!"
+      );
+    } catch (error) {
+      toast.error(error.message);
+      console.error(isLogin ? "Login error" : "Signup error", error);
+    } finally {
+      setLoading(false);
+      // Reset form state
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+    }
+  };
+
+  // Google Sign-In Method
+  const signInWithGoogle = async () => {
+    setLoading(true);
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      await createUserDocument(user);
+
+      navigate("/dashboard");
+      toast.success("Google Authentication Successful!");
+    } catch (error) {
+      toast.error(`Google Sign-In Error: ${error.message}`);
+      console.error("Google Sign-In Error", error);
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   return (
     <>
@@ -159,7 +124,7 @@ function SignUpSignIn() {
             </p>
 
             <Input
-              type="text"
+              type="email"
               label="Email"
               state={email}
               setState={setEmail}
@@ -178,7 +143,7 @@ function SignUpSignIn() {
                 loading ? "Loading..." : "Login With Email & Password"
               }
               isPrimary={true}
-              onClick={loginWithEmail}
+              onClick={() => handleAuthentication(true)}
               disabled={loading}
             />
             <p className="text-center">or</p>
@@ -193,9 +158,7 @@ function SignUpSignIn() {
               <a
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
-                onClick={() => {
-                  setLogin(false);
-                }}
+                onClick={() => setLogin(false)}
               >
                 SignUp
               </a>
@@ -219,7 +182,7 @@ function SignUpSignIn() {
               placeholder="Your Name"
             />
             <Input
-              type="text"
+              type="email"
               label="Email"
               state={email}
               setState={setEmail}
@@ -237,12 +200,12 @@ function SignUpSignIn() {
               type="password"
               state={confirmPassword}
               setState={setConfirmPassword}
-              placeholder=" Confirm Your Password"
+              placeholder="Confirm Your Password"
             />
             <Button
               buttonLabel={loading ? "Loading..." : "Sign Up"}
               isPrimary={true}
-              onClick={signUpWithEmail}
+              onClick={() => handleAuthentication(false)}
               disabled={loading}
             />
             <p className="text-center">or</p>
@@ -256,9 +219,7 @@ function SignUpSignIn() {
               <a
                 href="#"
                 className="font-medium text-indigo-600 hover:underline"
-                onClick={() => {
-                  setLogin(true);
-                }}
+                onClick={() => setLogin(true)}
               >
                 Log In
               </a>
