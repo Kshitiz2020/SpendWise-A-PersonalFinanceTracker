@@ -38,8 +38,11 @@ function Header() {
       <div className="h-[4rem] text-white bg-primary px-[2rem] pt-[1rem] text-2xl flex justify-between items-center">
         <p>SpendWise</p>
         {user && (
-          <div>
-            <img src={user.photoURL ? user.photoURL : userImg} />
+          <div className="flex items-center justify-between gap-4">
+            <img
+              src={user.photoURL ? user.photoURL : userImg}
+              className="object-cover w-10 h-10 rounded-full"
+            />
             <p onClick={logout}>Logout</p>
           </div>
         )}
