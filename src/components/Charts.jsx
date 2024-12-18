@@ -2,7 +2,7 @@ import React from "react";
 import { Line, Pie } from "@ant-design/charts";
 
 function Charts({ sortedTransactions }) {
-  const data = sortedTransactions.map((item) => {
+  const data = (sortedTransactions || []).map((item) => {
     return {
       date: item.date,
       amount: item.amount,

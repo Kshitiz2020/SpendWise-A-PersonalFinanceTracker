@@ -12,9 +12,9 @@ const { Option } = Select;
 
 const TransactionSearch = ({
   transactions = [], // Default to an empty array if undefined
-  exportToCsv,
-  addTransaction,
-  fetchTransactions,
+  exportToCsv = () => {}, // Default function
+  addTransaction = () => {}, // Default function
+  fetchTransactions = () => {}, // Default function
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
@@ -30,11 +30,10 @@ const TransactionSearch = ({
         complete: async function (results) {
           // Now results.data is an array of objects representing your CSV rows
           for (const transaction of results.data) {
-            // Write each transaction to Firebase, you can use the addTransaction function here
             console.log("Transactions", transaction);
             const newTransaction = {
               ...transaction,
-              amount: parseInt(transaction.amount),
+              amount: parseInt(transaction.amount, 10),
             };
             await addTransaction(newTransaction, true);
           }
@@ -172,9 +171,9 @@ const TransactionSearch = ({
 
 TransactionSearch.propTypes = {
   transactions: PropTypes.array,
-  exportToCsv: PropTypes.func.isRequired,
-  addTransaction: PropTypes.func.isRequired,
-  fetchTransactions: PropTypes.func.isRequired,
+  exportToCsv: PropTypes.func,
+  addTransaction: PropTypes.func,
+  fetchTransactions: PropTypes.func,
 };
 
 export default TransactionSearch;
