@@ -9,6 +9,7 @@ import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
 import TransactionsTable from "../components/TransactionsTable";
+import Charts from "../components/Charts";
 
 function Dashboard() {
   /* const sampleTransactions = [
@@ -152,6 +153,7 @@ function Dashboard() {
         expenses={expenses}
         totalBalance={totalBalance}
       />
+      <Charts />
       <Modal
         open={isIncomeModalopen}
         title="Add Income"
