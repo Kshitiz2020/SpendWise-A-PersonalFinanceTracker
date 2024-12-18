@@ -10,6 +10,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
 import TransactionsTable from "../components/TransactionsTable";
 import Charts from "../components/Charts";
+import Null from "../components/Null";
 
 function Dashboard() {
   /* const sampleTransactions = [
@@ -153,6 +154,8 @@ function Dashboard() {
         expenses={expenses}
         totalBalance={totalBalance}
       />
+
+      {/*  {transactions.length != 0 ? <Charts /> : <Null />} */}
       <Charts />
       <Modal
         open={isIncomeModalopen}

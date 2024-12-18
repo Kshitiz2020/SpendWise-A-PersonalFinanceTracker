@@ -1,18 +1,19 @@
 import React from "react";
-import { Line } from "@ant-design/charts";
+import { Line, Pie } from "@ant-design/charts";
 
-function Charts() {
-  const data = [
-    { year: "1991", value: 3 },
-    { year: "1992", value: 4 },
-    { year: "1993", value: 3.5 },
-    { year: "1994", value: 5 },
-    { year: "1995", value: 4.9 },
-    { year: "1996", value: 6 },
-    { year: "1997", value: 7 },
-    { year: "1998", value: 9 },
-    { year: "1999", value: 13 },
-  ];
+function Charts({ sortedTransactions }) {
+  const data = sortedTransactions.map((item) => {
+    return {
+      date: item.date,
+      amount: item.amount,
+    };
+  });
+
+  const spendingData = sortedTransactions.filter((transaction) => {
+    if (transaction.type == "expenses") {
+      return { transaction: transaction.tag, amount: transaction.amount };
+    }
+  });
 
   const props = {
     data,
@@ -20,6 +21,24 @@ function Charts() {
     yField: "value",
   };
 
-  return <Line {...props} />;
+  const spendingDataConfig = {
+    spendingData,
+    angleField: "value",
+    colorField: "tag",
+  };
+
+  return (
+    <>
+      <div>
+        <h3>Your Analytics</h3>
+        <Line {...props} />
+      </div>
+
+      <div>
+        <h3>Your spending</h3>
+        <Pie {...spendingDataConfig} />
+      </div>
+    </>
+  );
 }
 export default Charts;
