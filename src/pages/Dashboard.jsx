@@ -4,7 +4,14 @@ import Cards from "../components/Cards";
 import { Modal } from "antd";
 import AddExpensesModal from "../components/AddExpense";
 import AddIncomeModal from "../components/AddIncome";
-import { addDoc, collection, query, getDocs } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  addDoc,
+  collection,
+  query,
+  getDocs,
+} from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import moment from "moment";
@@ -45,7 +52,7 @@ function Dashboard() {
       tag: values.tag,
       name: values.name,
     };
-    addTransaction(newTransaction, false);
+    addTransaction(newTransaction);
   };
 
   useEffect(() => {
@@ -79,14 +86,16 @@ function Dashboard() {
     console.log("Adding transaction:", transaction);
 
     try {
-      // Assuming you have a Firestore collection called "transactions"
-      const transactionsRef = firebase.firestore().collection("transactions");
-      await transactionsRef.add(transaction); // Add the transaction to Firestore
+      // Use the 'transactions' collection and add the new transaction
+      const docRef = doc(collection(db, "transactions")); // Generate a new document reference
+      await setDoc(docRef, transaction); // Set the document with the transaction data
+
       if (fromCSV) {
         toast.success("Transaction added successfully from CSV.");
       } else {
         toast.success("Transaction added successfully.");
       }
+
       fetchTransactions(); // Refresh the list of transactions
     } catch (error) {
       console.error("Error adding transaction: ", error);
@@ -124,7 +133,7 @@ function Dashboard() {
 
       {/* Render charts if there are transactions */}
       {/* {transactions.length !== 0 ? <Charts /> : <Null />} */}
-      <Charts />
+      <Charts sortedTransactions={transactions} />
 
       <Modal
         open={isIncomeModalopen}

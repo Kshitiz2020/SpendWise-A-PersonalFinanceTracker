@@ -14,6 +14,9 @@ function Charts({ sortedTransactions }) {
       value: transaction.amount,
     }));
 
+  console.log("Line Chart Data:", data); // Debugging
+  console.log("Pie Chart Data:", spendingData); // Debugging
+
   const lineChartConfig = {
     data,
     xField: "date",
@@ -32,7 +35,7 @@ function Charts({ sortedTransactions }) {
     radius: 0.8,
     label: {
       type: "outer",
-      content: "{name} ({percentage})",
+      content: "{name} ({percentage}%)",
     },
   };
 
