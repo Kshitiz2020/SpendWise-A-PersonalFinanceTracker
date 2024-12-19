@@ -11,6 +11,7 @@ import moment from "moment";
 import TransactionsTable from "../components/TransactionsTable";
 import Charts from "../components/Charts";
 import Null from "../components/Null";
+import { toast } from "react-toastify";
 
 function Dashboard() {
   const [user] = useAuthState(auth);
@@ -74,39 +75,41 @@ function Dashboard() {
   }
 
   // Add transaction
-  async function addTransaction(transaction, many) {
+  const addTransaction = async (transaction, fromCSV = false) => {
+    console.log("Adding transaction:", transaction);
+
     try {
-      const docRef = await addDoc(
-        collection(db, `users/${user.uid}/transactions`),
-        transaction
-      );
-      console.log("Document written with ID: ", docRef.id);
-      if (!many) {
-        toast.success("Transaction Added!");
+      // Assuming you have a Firestore collection called "transactions"
+      const transactionsRef = firebase.firestore().collection("transactions");
+      await transactionsRef.add(transaction); // Add the transaction to Firestore
+      if (fromCSV) {
+        toast.success("Transaction added successfully from CSV.");
+      } else {
+        toast.success("Transaction added successfully.");
       }
-    } catch (e) {
-      console.error("Error adding document: ", e);
-      if (!many) {
-        toast.error("Couldn't add transaction");
-      }
+      fetchTransactions(); // Refresh the list of transactions
+    } catch (error) {
+      console.error("Error adding transaction: ", error);
+      toast.error("Error adding transaction.");
     }
-  }
+  };
 
   // Fetch transactions
-  async function fetchTransactions() {
-    setLoading(true);
-    if (user) {
-      const q = query(collection(db, `users/${user.uid}/transactions`));
-      const querySnapshot = await getDocs(q);
-      let transactionsArray = [];
-      querySnapshot.forEach((doc) => {
-        transactionsArray.push(doc.data());
-      });
-      setTransactions(transactionsArray);
-      toast.success("Transactions Fetched!");
+  const fetchTransactions = async () => {
+    try {
+      const transactionsRef = collection(db, "transactions");
+      const snapshot = await getDocs(transactionsRef);
+      const fetchedTransactions = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        ...doc.data(),
+      }));
+      console.log("Fetched transactions:", fetchedTransactions);
+      setTransactions(fetchedTransactions);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      toast.error("Error fetching transactions");
     }
-    setLoading(false);
-  }
+  };
 
   return (
     <div>
