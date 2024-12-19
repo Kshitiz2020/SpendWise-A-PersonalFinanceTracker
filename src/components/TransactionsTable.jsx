@@ -6,11 +6,12 @@ import { parse } from "papaparse";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import PropTypes from "prop-types";
+import Papa from "papaparse"; // Make sure to import papaparse
 
 const { Search } = Input;
 const { Option } = Select;
 
-const TransactionSearch = ({
+const TransactionsTable = ({
   transactions = [], // Default to an empty array if undefined
   exportToCsv = () => {}, // Default function
   addTransaction = () => {}, // Default function
@@ -21,6 +22,16 @@ const TransactionSearch = ({
   const [typeFilter, setTypeFilter] = useState("");
   const [sortKey, setSortKey] = useState("");
   const fileInput = useRef();
+
+  // Function to export transactions to CSV
+  const handleExportToCsv = () => {
+    const csv = Papa.unparse(transactions); // Convert the transactions array to CSV
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = "transactions.csv";
+    link.click();
+  };
 
   function importFromCsv(event) {
     event.preventDefault();
@@ -143,7 +154,7 @@ const TransactionSearch = ({
         <div className="flex flex-wrap justify-center gap-4 mb-4 md:justify-start">
           <button
             className="px-4 py-2 bg-gray-300 rounded btn hover:bg-gray-400"
-            onClick={exportToCsv}
+            onClick={handleExportToCsv} // Call the handleExportToCsv function here
           >
             Export to CSV
           </button>
@@ -169,11 +180,11 @@ const TransactionSearch = ({
   );
 };
 
-TransactionSearch.propTypes = {
+TransactionsTable.propTypes = {
   transactions: PropTypes.array,
   exportToCsv: PropTypes.func,
   addTransaction: PropTypes.func,
   fetchTransactions: PropTypes.func,
 };
 
-export default TransactionSearch;
+export default TransactionsTable;

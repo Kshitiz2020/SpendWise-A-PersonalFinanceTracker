@@ -37,17 +37,29 @@ function Charts({ sortedTransactions }) {
   };
 
   return (
-    <>
-      <div>
-        <h3>Your Analytics</h3>
-        <Line {...lineChartConfig} />
+    <div className="max-w-5xl px-4 py-8 mx-auto rounded-lg shadow-lg bg-gray-50">
+      <h1 className="mb-8 text-2xl font-bold text-center text-gray-800">
+        Financial Analytics Dashboard
+      </h1>
+
+      <div className="mb-8">
+        <h3 className="mb-4 text-lg font-semibold text-gray-700">
+          Your Analytics
+        </h3>
+        <div className="p-4 bg-white rounded-lg shadow-sm">
+          <Line {...lineChartConfig} />
+        </div>
       </div>
 
       <div>
-        <h3>Your Spending</h3>
-        <Pie {...pieChartConfig} />
+        <h3 className="mb-4 text-lg font-semibold text-gray-700">
+          Your Spending
+        </h3>
+        <div className="p-4 bg-white rounded-lg shadow-sm">
+          <Pie {...pieChartConfig} />
+        </div>
       </div>
-    </>
+    </div>
   );
 }
 
