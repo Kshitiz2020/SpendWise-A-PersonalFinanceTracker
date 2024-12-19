@@ -120,7 +120,8 @@ function Dashboard() {
       />
 
       {/* Render charts if there are transactions */}
-      {transactions.length !== 0 ? <Charts /> : <Null />}
+      {/* {transactions.length !== 0 ? <Charts /> : <Null />} */}
+      <Charts />
 
       <Modal
         open={isIncomeModalopen}
