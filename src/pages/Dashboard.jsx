@@ -141,8 +141,12 @@ function Dashboard() {
       />
 
       {/* Render charts if there are transactions */}
-      {/* {transactions.length !== 0 ? <Charts /> : <Null />} */}
-      <Charts sortedTransactions={sortedTransactions} />
+      {transactions.length !== 0 ? (
+        <Charts sortedTransactions={sortedTransactions} />
+      ) : (
+        <Null />
+      )}
+      {/*<Charts sortedTransactions={sortedTransactions} />*/}
 
       <Modal
         open={isIncomeModalopen}

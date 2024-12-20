@@ -142,25 +142,6 @@ function Charts({ sortedTransactions, addTransaction }) {
         </Card>
       </Row>
 
-      {/* Date Picker for adding income */}
-      <div className="mb-8">
-        <h3 className="mb-4 text-lg font-semibold text-gray-700">
-          Select Date for Income
-        </h3>
-        <DatePicker
-          value={selectedDate}
-          onChange={handleDateChange}
-          format="YYYY-MM-DD"
-        />
-        <Button
-          type="primary"
-          onClick={handleAddTransaction}
-          style={{ marginTop: "16px" }}
-        >
-          Add Income
-        </Button>
-      </div>
-
       {/* Line Chart for financial data */}
       <div className="mb-8">
         <h3 className="mb-4 text-lg font-semibold text-gray-700">
