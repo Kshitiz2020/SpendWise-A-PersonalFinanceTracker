@@ -8,6 +8,7 @@ const Cards = ({
   income,
   expenses,
   totalBalance,
+  restore,
 }) => (
   <div className="p-4 mx-auto">
     <Row gutter={[32, 32]} justify="center">
@@ -18,7 +19,7 @@ const Cards = ({
       >
         <strong>€</strong>
         {totalBalance}
-        <Button buttonLabel="Restore Balance" />
+        <Button onClick={restore} buttonLabel="Restore Balance" />
       </Card>
 
       {/*Total Income */}

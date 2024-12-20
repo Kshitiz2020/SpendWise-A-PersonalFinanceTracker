@@ -11,6 +11,7 @@ import {
   collection,
   query,
   getDocs,
+  updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -43,6 +44,12 @@ function Dashboard() {
   const handleIncomeCancel = () => {
     setIsIncomeModalopen(false);
   };
+
+  /* const restore = () => {
+    setIncome(0);
+    setExpenses(0);
+    setTotalBalance(0);
+  }; */
 
   const onFinish = (values, type) => {
     const newTransaction = {
@@ -129,6 +136,34 @@ function Dashboard() {
     return new Date(b.date) - new Date(a.date);
   });
 
+  // restore transaction
+  const restoreAllTransactions = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "transactions"));
+      const updates = [];
+
+      querySnapshot.forEach((doc) => {
+        const docRef = doc.ref;
+
+        // Set amount to 0 (or any other fields to reset)
+        updates.push(
+          updateDoc(docRef, { amount: 0 }) // Replace 'amount' with the field to reset
+        );
+      });
+
+      await Promise.all(updates); // Wait for all updates to complete
+      console.log("All transactions have been reset!");
+      toast.success("All transactions reset successfully.");
+
+      // Clear or fetch updated transactions
+      setTransactions([]); // Clear the table UI by resetting state
+      fetchTransactions(); // Alternatively, refetch transactions if necessary
+    } catch (error) {
+      console.error("Error resetting transactions:", error);
+      toast.error("Failed to reset transactions.");
+    }
+  };
+
   return (
     <div>
       <Header />
@@ -138,15 +173,16 @@ function Dashboard() {
         income={income}
         expenses={expenses}
         totalBalance={totalBalance}
+        restore={restoreAllTransactions}
       />
 
       {/* Render charts if there are transactions */}
-      {transactions.length !== 0 ? (
-        <Charts sortedTransactions={sortedTransactions} />
+      {/*   {transactions.length !== 0 ? (
+    /*     <Charts sortedTransactions={sortedTransactions} />
       ) : (
         <Null />
-      )}
-      {/*<Charts sortedTransactions={sortedTransactions} />*/}
+      )} */}
+      <Charts sortedTransactions={sortedTransactions} />
 
       <Modal
         open={isIncomeModalopen}

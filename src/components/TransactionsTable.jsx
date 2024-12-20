@@ -35,27 +35,52 @@ const TransactionsTable = ({
 
   function importFromCsv(event) {
     event.preventDefault();
-    try {
-      parse(event.target.files[0], {
-        header: true,
-        complete: async function (results) {
-          // Now results.data is an array of objects representing your CSV rows
-          for (const transaction of results.data) {
-            console.log("Transactions", transaction);
+
+    if (!event.target.files || event.target.files.length === 0) {
+      toast.error("No file selected!");
+      return;
+    }
+
+    const file = event.target.files[0];
+
+    parse(file, {
+      header: true,
+      skipEmptyLines: true, // Skip any empty rows in the CSV
+      complete: async (results) => {
+        try {
+          const { data, errors } = results;
+
+          if (errors.length > 0) {
+            console.error("CSV Parsing Errors:", errors);
+            toast.error("Error parsing CSV file. Please check the format.");
+            return;
+          }
+
+          // Validate and process each transaction row
+          for (const transaction of data) {
+            // Ensure the data is valid before adding
+            if (!transaction.name || !transaction.amount || !transaction.type) {
+              console.warn("Skipping invalid row:", transaction);
+              continue;
+            }
+
             const newTransaction = {
               ...transaction,
-              amount: parseInt(transaction.amount, 10),
+              amount: parseInt(transaction.amount, 10), // Ensure amount is a number
             };
-            await addTransaction(newTransaction, true);
+
+            await addTransaction(newTransaction, true); // Add to the database
           }
-        },
-      });
-      toast.success("All Transactions Added");
-      fetchTransactions();
-      event.target.files = null;
-    } catch (e) {
-      toast.error(e.message);
-    }
+
+          toast.success("All transactions imported successfully.");
+          fetchTransactions(); // Refresh the transaction list
+          event.target.value = ""; // Reset the file input to allow re-import
+        } catch (error) {
+          console.error("Error during import:", error);
+          toast.error("Failed to import transactions.");
+        }
+      },
+    });
   }
 
   const columns = [
