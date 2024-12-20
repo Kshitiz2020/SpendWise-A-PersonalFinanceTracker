@@ -79,8 +79,8 @@ function Dashboard() {
     setIncome(incomeTotal);
     setExpenses(expensesTotal);
     setTotalBalance(incomeTotal - expensesTotal);
+    console.log("T1", transactions);
   }
-
   // Add transaction
   const addTransaction = async (transaction, fromCSV = false) => {
     console.log("Adding transaction:", transaction);
@@ -112,13 +112,19 @@ function Dashboard() {
         id: doc.id,
         ...doc.data(),
       }));
-      console.log("Fetched transactions:", fetchedTransactions);
+
+      console.log("Fetched transactions:", fetchedTransactions); // Add this to check if the transactions are being fetched
+
       setTransactions(fetchedTransactions);
     } catch (error) {
       console.error("Error fetching transactions:", error);
       toast.error("Error fetching transactions");
     }
   };
+
+  let sortedTransactions = transactions.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
 
   return (
     <div>
@@ -133,7 +139,7 @@ function Dashboard() {
 
       {/* Render charts if there are transactions */}
       {/* {transactions.length !== 0 ? <Charts /> : <Null />} */}
-      <Charts sortedTransactions={transactions} />
+      <Charts sortedTransactions={sortedTransactions} />
 
       <Modal
         open={isIncomeModalopen}
