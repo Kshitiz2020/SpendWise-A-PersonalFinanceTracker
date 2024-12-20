@@ -70,6 +70,9 @@ function Dashboard() {
     let expensesTotal = 0;
 
     transactions.forEach((transaction) => {
+      const monthYear = moment(transaction.date).format("MMM YYYY");
+      const tag = transaction.tag;
+
       if (transaction.type === "income") {
         incomeTotal += transaction.amount;
       } else {

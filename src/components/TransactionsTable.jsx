@@ -12,10 +12,10 @@ const { Search } = Input;
 const { Option } = Select;
 
 const TransactionsTable = ({
-  transactions = [], // Default to an empty array if undefined
-  exportToCsv = () => {}, // Default function
-  addTransaction = () => {}, // Default function
-  fetchTransactions = () => {}, // Default function
+  transactions = [],
+  exportToCsv = () => {},
+  addTransaction = () => {},
+  fetchTransactions = () => {},
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedTag, setSelectedTag] = useState("");
