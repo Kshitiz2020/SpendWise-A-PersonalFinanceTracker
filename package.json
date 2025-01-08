@@ -11,6 +11,8 @@
   },
   "dependencies": {
     "@ant-design/charts": "^2.2.5",
+    "@rollup/plugin-commonjs": "^28.0.2",
+    "@rollup/plugin-node-resolve": "^16.0.0",
     "antd": "^5.22.5",
     "dotenv": "^16.4.7",
     "firebase": "^11.1.0",
