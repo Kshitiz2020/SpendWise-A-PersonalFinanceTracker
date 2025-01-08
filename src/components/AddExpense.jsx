@@ -70,10 +70,16 @@ function AddExpensesModal({
           name="tag"
           rules={[{ required: true, message: "Please select a tag!" }]}
         >
-          <Select className="w-full p-2 border-2 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <Select.Option value="food">Food</Select.Option>
-            <Select.Option value="education">Education</Select.Option>
-            <Select.Option value="office">Office</Select.Option>
+          <Select className="w-full border-2 border-gray-300 rounded-md focus:outline-0 outline-0 focus:ring-2 focus:ring-blue-500">
+            <Select.Option className="border-0" value="food">
+              Food
+            </Select.Option>
+            <Select.Option className="border-0" value="education">
+              Education
+            </Select.Option>
+            <Select.Option className="border-0" value="office">
+              Office
+            </Select.Option>
           </Select>
         </Form.Item>
 
